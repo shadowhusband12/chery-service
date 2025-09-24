@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Booking Car Service - Chery Arta Bekasi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <!-- SheetJS (xlsx) CDN -->
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+  <style>
+  body { font-family: 'Arial', sans-serif; }
+  .hero-bg { background-color: #1e3a8a; }
+  .fade-in { animation: fadeIn 2s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .card-hover { transition: transform 0.3s; }
+  .card-hover:hover { transform: translateY(-5px); }
+  #adminToggleBtn, #adminToggleBtnMobile { cursor: pointer; }
+  </style>
+
+<style>
+/* CSS yang sudah ada, dengan sedikit penyesuaian */
+select, option {
+  white-space: normal !important;
+  word-break: break-word;
+  line-height: 1.4em;
+}
+select {
+  height: auto; /* Biarkan tinggi menyesuaikan konten */
+  max-width: 100%; /* Agar tidak melebar keluar form */
+  transition: height 0.3s ease-in-out; /* Transisi yang lebih halus */
+  min-height: 42px; /* Tinggi minimum default untuk satu baris, sesuaikan jika perlu */
+  overflow: hidden; /* Sembunyikan overflow secara default */
+  appearance: none; /* Hapus gaya default browser untuk select */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E"); /* Custom arrow */
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem; /* Ruang untuk custom arrow */
+}
+</style>
+
+
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-2 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex flex-col items-center">
+        <img
+          src="https://www.pinclipart.com/picdir/big/82-823215_chery-logo-png-chery-clipart.png"
+          alt="Chery logo"
+          class="h-12 mr-3"
+          onerror="this.src='https://www.carlogos.org/logo/Chery-logo-2013-2560x1440.png'"
+        >
+      </div>
+      <nav class="hidden md:flex space-x-6">
+  <a href="#home" class="hover:text-yellow-300 transition">Home</a>
+  <a href="#services" class="hover:text-yellow-300 transition">Fasilitas</a>
+  <a href="#booking" class="hover:text-yellow-300 transition">Book Service</a>
+  <a href="#about" class="hover:text-yellow-300 transition">About</a>
+  <a href="#contact" class="hover:text-yellow-300 transition">Contact</a>
+        <button
+          id="adminToggleBtn"
+          class="ml-4 bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500 transition"
+          title="Admin Panel"
+          aria-label="Toggle Admin Panel"
+        >
+          Admin Panel
+        </button>
+      </nav>
+      <button class="md:hidden" onclick="toggleMenu()">
+        <i class="fas fa-bars text-2xl"></i>
+      </button>
+    </div>
+    <nav id="mobile-menu" class="md:hidden mt-4 space-y-2 hidden">
+  <a href="#home" class="block hover:text-yellow-300">Home</a>
+  <a href="#services" class="block hover:text-yellow-300">Fasilitas</a>
+  <a href="#booking" class="block hover:text-yellow-300">Book Service</a>
+  <a href="#about" class="block hover:text-yellow-300">About</a>
+  <a href="#contact" class="block hover:text-yellow-300">Contact</a>
+      <button
+        id="adminToggleBtnMobile"
+        class="w-full bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500 transition mt-2"
+        title="Admin Panel"
+        aria-label="Toggle Admin Panel"
+      >
+        Admin Panel
+      </button>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section id="home" class="hero-bg text-white py-20 main-sections">
+    <div class="container mx-auto text-center fade-in">
+      <h2 class="text-4xl md:text-6xl font-bold mb-4">Book Your Chery Arta Service Today</h2>
+      <p class="text-lg md:text-xl mb-8">Expert maintenance and repair for your Chery Arta vehicles in Bekasi. Hassle-free booking with top-notch service.</p>
+      <a href="#booking" class="bg-yellow-500 text-black px-8 py-4 rounded-full text-lg font-semibold hover:bg-yellow-600 transition">Book Now</a>
+    </div>
+  </section>
+
+  <!-- Fasilitas -->
+
+  <section id="services" class="py-20 bg-white main-sections">
+    <div class="container mx-auto text-center">
+      <h3 class="text-3xl font-bold mb-10">Fasilitas</h3>
+      <div class="relative flex items-center justify-center">
+        <button id="fasilitasPrev" class="absolute left-0 z-10 bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-blue-800" style="top:50%;transform:translateY(-50%);">
+          <img src="https://raw.githubusercontent.com/AdminCheryarta01/chery-booking-service/refs/heads/main/img/%E2%80%94Pngtree%E2%80%94vector%20left%20arrow%20icon_4231912%20-%20Copy.png" alt="Kiri" style="width:2rem;height:2rem;object-fit:contain;filter:invert(1);">
+        </button>
+        <div id="fasilitasSlider" class="overflow-hidden w-full max-w-xl">
+          <div id="fasilitasImages" class="flex transition-transform duration-500" style="width:100%;">
+
+  <!-- Fasilitas 1 -->
+  <div class="bg-white shadow-lg rounded-lg p-4 flex items-center justify-center card-hover aspect-[16/9] min-w-[400px]">
+    <img src="https://raw.githubusercontent.com/AdminCheryarta01/chery-booking-service/refs/heads/main/img/frontside.webp" 
+         class="rounded fasilitas-img cursor-pointer object-cover w-full h-full" 
+         alt="Fasilitas 1">
+  </div>
+
+  <!-- Fasilitas 2 -->
+  <div class="bg-white shadow-lg rounded-lg p-4 flex items-center justify-center card-hover aspect-[16/9] min-w-[400px]">
+    <img src="https://raw.githubusercontent.com/AdminCheryarta01/chery-booking-service/refs/heads/main/img/IMG-20250919-WA0014.jpg" 
+         class="rounded fasilitas-img cursor-pointer object-cover w-full h-full" 
+         alt="Fasilitas 2">
+  </div>
+
+  <!-- Fasilitas 3 -->
+  <div class="bg-white shadow-lg rounded-lg p-4 flex items-center justify-center card-hover aspect-[16/9] min-w-[400px]">
+    <img src="https://raw.githubusercontent.com/AdminCheryarta01/chery-booking-service/refs/heads/main/img/IMG-20250919-WA0015.jpg" 
+         class="rounded fasilitas-img cursor-pointer object-cover w-full h-full" 
+         alt="Fasilitas 3">
+  </div>
+
+  <!-- Fasilitas 4 -->
+  <div class="bg-white shadow-lg rounded-lg p-4 flex items-center justify-center card-hover aspect-[16/9] min-w-[400px]">
+    <img src="https://raw.githubusercontent.com/AdminCheryarta01/chery-booking-service/refs/heads/main/img/IMG-20250919-WA0019.jpg" 
+         class="rounded fasilitas-img cursor-pointer object-cover w-full h-full" 
+         alt="Fasilitas 4">
+  </div>
+
+  <!-- Fasilitas 5 -->
+  <div class="bg-white shadow-lg rounded-lg p-4 flex items-center justify-center card-hover aspect-[16/9] min-w-[400px]">
+    <img src="https://raw.githubusercontent.com/AdminCheryarta01/chery-booking-service/refs/heads/main/img/IMG-20250919-WA0018.jpg" 
+         class="rounded fasilitas-img cursor-pointer object-cover w-full h-full" 
+         alt="Fasilitas 5">
+  </div>
+
+  <!-- Fasilitas 6 -->
+  <div class="bg-white shadow-lg rounded-lg p-4 flex items-center justify-center card-hover aspect-[16/9] min-w-[400px]">
+    <img src="https://raw.githubusercontent.com/AdminCheryarta01/chery-booking-service/refs/heads/main/img/fasilitas2.webp" 
+         class="rounded fasilitas-img cursor-pointer object-cover w-full h-full" 
+         alt="Fasilitas 6">
+  </div>
+
+  <!-- Fasilitas 7 -->
+  <div class="bg-white shadow-lg rounded-lg p-4 flex items-center justify-center card-hover aspect-[16/9] min-w-[400px]">
+    <img src="https://raw.githubusercontent.com/AdminCheryarta01/chery-booking-service/refs/heads/main/img/fasilitas3.webp" 
+         class="rounded fasilitas-img cursor-pointer object-cover w-full h-full" 
+         alt="Fasilitas 7">
+  </div>
+
+    <!-- Fasilitas 8 -->
+  <div class="bg-white shadow-lg rounded-lg p-4 flex items-center justify-center card-hover aspect-[16/9] min-w-[400px]">
+    <img src="https://raw.githubusercontent.com/AdminCheryarta01/chery-booking-service/refs/heads/main/img/fasilitas4.webp" 
+         class="rounded fasilitas-img cursor-pointer object-cover w-full h-full" 
+         alt="Fasilitas 8">
+  </div>
+
+</div>
+        </div>
+        <button id="fasilitasNext" class="absolute right-0 z-10 bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-blue-800" style="top:50%;transform:translateY(-50%);">
+          <img src="https://raw.githubusercontent.com/AdminCheryarta01/chery-booking-service/refs/heads/main/img/%E2%80%94Pngtree%E2%80%94vector%20left%20arrow%20icon_4231912.png" alt="Kanan" style="width:2rem;height:2rem;object-fit:contain;filter:invert(1);">
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking -->
+  <section id="booking" class="py-20 bg-gray-50 main-sections">
+    <div class="container mx-auto max-w-2xl">
+      <h3 class="text-3xl font-bold text-center mb-10">Book Your Service</h3>
+      <form class="bg-white shadow-lg rounded-lg p-8" onsubmit="return handleBooking(event)">
+        <!-- form fields sama dengan sebelumnya -->
+        <div class="mb-4"><label>Name</label><input type="text" id="name" required class="w-full border rounded-lg p-2"></div>
+        <div class="mb-4">
+          <label class="block mb-2">Plat Nomor</label>
+          <div class="flex gap-2">
+            <input type="text" id="plat_kode" maxlength="2" required placeholder="A" class="w-16 border rounded-lg p-2 text-center font-bold" oninput="this.value = this.value.toUpperCase()">
+            <span class="self-center">-</span>
+            <input type="text" id="plat_angka" maxlength="5" required placeholder="1234" class="w-20 border rounded-lg p-2 text-center font-bold">
+            <span class="self-center">-</span>
+            <input type="text" id="plat_huruf" maxlength="4" required placeholder="ABC" class="w-20 border rounded-lg p-2 text-center font-bold" oninput="this.value = this.value.toUpperCase()">
+          </div>
+        </div>
+        <div class="mb-4"><label>Phone</label><input type="tel" id="phone" required class="w-full border rounded-lg p-2"></div>
+  <div class="mb-4">
+  <label class="block text-gray-700 mb-2" for="model">Type Mobil</label>
+  <input type="text" id="model" required placeholder="Masukkan tipe mobil Anda" class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300">
+</div>
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2" for="service">Service Type</label>
+          <select id="service" required class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300">
+            <option value="">Select Service</option>
+            <optgroup label="First Maintenance ICE">
+              <option value="first_maintenance_1000">First Maintenance (1.000 km/1 Bln)</option>
+              <option value="first_maintenance_5000">First Maintenance (5.000 km/3 Bln)</option>
+            </optgroup>
+            <optgroup label="First Maintenance EV">
+              <option value="first_maintenance_ev_5000">First Maintenance EV (5.000 km/6 Bln)</option>
+            </optgroup>
+            <optgroup label="Free Maintenance">
+              <option value="Tiggo_5X_/_Cross_Free">Tiggo 5X / Cross Series: Free Maintenance (5.000 km/6 Bln) - (10.000 km/12 Bln) - (20.000 km/24 Bln) - (30.000 km/36 Bln) - (40.000 km/48 Bln) - (60.000 km/72 Bln)</option>
+              <option value="Tiggo_8_Free">Tiggo 8 Series: Free Maintenance (15.000 km/12 Bln) - (30.000 km/36 Bln) - (45.000 km/48 Bln) - (60.000 km/72 Bln)</option>
+              <option value="EV_Free">EV Series: Free Maintenance (5.000 km/6 Bln) - (15.000 km/12 Bln) - (30.000 km/36 Bln) - (45.000 km/48 Bln) - (60.000 km/72 Bln)</option>
+              <option value="CSH_Free">CSH Series: Free Maintenance (1.000 km/1 Bln) - (15.000 km/12 Bln) - (30.000 km/36 Bln) - (45.000 km/48 Bln) - (60.000 km/72 Bln)</option>
+            </optgroup>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="mb-4"><label>Date</label><input type="date" id="date" required class="w-full border rounded-lg p-2"></div>
+        <div class="mb-4"><label>Time</label><input type="time" id="time" required class="w-full border rounded-lg p-2"></div>
+        <div class="mb-4"><label>Keluhan</label><textarea id="Keluhan" class="w-full border rounded-lg p-2"></textarea></div>
+        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg">Submit Booking</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Admin Panel -->
+  <section id="adminPanel" class="py-20 bg-gray-100 hidden">
+  <div class="container mx-auto max-w-full px-8" style="overflow-x:visible;">
+      <h3 class="text-3xl font-bold text-center mb-10">Admin Panel - Booking List</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full bg-white shadow rounded-lg border border-gray-300">
+          <thead class="bg-blue-600 text-white" style="padding-left:32px;padding-right:32px;">
+            <tr>
+              <th class="border border-gray-300">Date</th>
+              <th class="border border-gray-300">Time</th>
+              <th class="border border-gray-300">Name</th>
+              <th class="border border-gray-300">Model</th>
+              <th class="border border-gray-300">Plat Nomor</th>
+              <th class="border border-gray-300">Service</th>
+              <th class="border border-gray-300">Keluhan</th>
+              <th class="border border-gray-300">Phone</th>
+              <th class="border border-gray-300">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="bookingListBody" style="padding-left:32px;padding-right:32px;"></tbody>
+        </table>
+      </div>
+      <div class="text-center mt-6 space-x-3">
+        <button id="exportBtn" class="bg-green-600 text-white px-6 py-2 rounded">Export to Excel</button>
+        <button id="adminLogoutBtn" class="bg-red-600 text-white px-6 py-2 rounded">Logout</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="py-20 bg-white main-sections">
+  <div class="container mx-auto flex flex-col md:flex-row items-start gap-8">
+    <div class="md:w-2/5 w-full flex justify-center">
+      <img src="https://lh3.googleusercontent.com/geougc-cs/AB3l90D4PvK22eY5_I8y9nvbF3wCSwj57TvMZz3sdmN54SeeHGb9bUsmxFixfZhRzUOmevgcgqCuxOqo8igJfbURq-NwhmwF5dzmLBdNHg9NPalqSXn97CYIDZ-S1SuSYL0igmW8noWeCv1DMYgj=s1916-w1916-h1820-rw">
+    </div>
+    <div class="md:w-3/5 w-full md:pl-8 mt-6 md:mt-0 text-left">
+      <h3 class="text-3xl font-bold mb-4">About Chery Arta Bekasi</h3>
+      <div class="space-y-4 text-lg">
+        <p>
+          Berlokasi di jantung kota Bekasi, dealer kami spesialis kendaraan Chery Arta.<br>
+          Kami menawarkan layanan mobil komprehensif yang memastikan kendaraan Anda dalam kondisi prima.<br>
+          Tim teknisi tersertifikasi kami menggunakan teknologi terkini untuk hasil terbaik.
+        </p>
+        <p>
+          Kunjungi kami di Jl. Jend. Sudirman No.1, Kranji, Kec. Bekasi.<br>
+          Open Monday to Friday, 08.00 AM - 16.00 PM.<br>
+          Except Saturday Open from 08.00 AM - 14.00 PM
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- Contact -->
+  <section id="contact" class="py-20 bg-gray-800 text-white main-sections">
+    <div class="container mx-auto text-center">
+      <h3 class="text-3xl font-bold mb-10">Contact Us</h3>
+      <p class="text-lg mb-4">
+        Get in touch for any inquiries or to schedule your service.
+      </p>
+      <p><i class="fas fa-phone mr-2"></i> Customer Service: +62 895-4045-46904</p>
+            <p><i class="fas fa-phone mr-2"></i> (021) 38317201</p>
+      <p><i class="fas fa-map-marker-alt mr-2"></i> Address: Jl. Jend. Sudirman No.1, Kranji, Kec. Bekasi Bar., Kota Bks, Jawa Barat, Indonesia</p>
+      <div class="mt-8">
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-blue-600 text-white py-4 text-center main-sections">
+    <p>&copy; 2023 Chery Arta Bekasi Car Service. All rights reserved.</p>
+  </footer>
+
+  <!-- Modal untuk preview gambar fasilitas -->
+<div id="fasilitasModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+  <div id="fasilitasModalContainer" class="relative bg-white rounded-lg shadow-lg border-4 border-blue-500 p-2 max-w-[90vw] max-h-[85vh] flex items-center justify-center">
+    <button id="closeFasilitasModal" class="absolute top-2 right-2 text-gray-700 hover:text-red-600 text-2xl font-bold">&times;</button>
+
+    <!-- Tombol navigasi -->
+    <button id="fasilitasModalPrev" class="absolute left-2 top-1/2 transform -translate-y-1/2 text-3xl text-blue-600 hover:text-blue-800" aria-label="Sebelumnya">&#8592;</button>
+    <button id="fasilitasModalNext" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-3xl text-blue-600 hover:text-blue-800" aria-label="Berikutnya">&#8594;</button>
+
+    <!-- Gambar -->
+    <img id="fasilitasModalImg" src="" alt="Preview"
+         class="object-contain rounded-lg max-w-full max-h-[80vh] mx-auto" />
+  </div>
+</div>
+
+<script>
+  // Modal popup gambar fasilitas
+  const fasilitasModal = document.getElementById('fasilitasModal');
+  const fasilitasModalImg = document.getElementById('fasilitasModalImg');
+  const closeBtn = document.getElementById('closeFasilitasModal');
+  const prevBtn = document.getElementById('fasilitasModalPrev');
+  const nextBtn = document.getElementById('fasilitasModalNext');
+
+  let fasilitasModalImages = Array.from(document.querySelectorAll('.fasilitas-img')).map(img => img.src);
+  let fasilitasModalIdx = 0;
+
+  // buka modal
+  document.querySelectorAll('.fasilitas-img').forEach((img, idx) => {
+    img.addEventListener('click', () => {
+      fasilitasModalIdx = idx;
+      fasilitasModalImg.src = fasilitasModalImages[fasilitasModalIdx];
+      fasilitasModal.classList.remove('hidden');
+    });
+  });
+
+  // navigasi
+  function showImg(idx) {
+    fasilitasModalIdx = (idx + fasilitasModalImages.length) % fasilitasModalImages.length;
+    fasilitasModalImg.src = fasilitasModalImages[fasilitasModalIdx];
+  }
+  // Event listener untuk tombol navigasi modal
+  prevBtn.onclick = e => { e.stopPropagation(); showImg(fasilitasModalIdx - 1); };
+  nextBtn.onclick = e => { e.stopPropagation(); showImg(fasilitasModalIdx + 1); };
+
+  // close
+  closeBtn.onclick = () => { fasilitasModal.classList.add('hidden'); fasilitasModalImg.src = ''; };
+  fasilitasModal.onclick = e => { if (e.target === fasilitasModal) closeBtn.onclick(); };
+
+  // keyboard support
+  window.addEventListener('keydown', e => {
+    if (fasilitasModal.classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeBtn.onclick();
+    if (e.key === 'ArrowLeft') showImg(fasilitasModalIdx - 1);
+    if (e.key === 'ArrowRight') showImg(fasilitasModalIdx + 1);
+  });
+
+  // --- KODE BARU UNTUK SWIPE GESTURE PADA MODAL ---
+  let modalTouchStartX = 0;
+  let modalTouchEndX = 0;
+  const modalMinSwipeDistance = 50; // Jarak minimum geser untuk dianggap sebagai swipe
+
+  // Menambahkan event listener ke elemen gambar di dalam modal
+  fasilitasModalImg.addEventListener('touchstart', (e) => {
+    // Hanya aktifkan swipe jika modal terlihat
+    if (!fasilitasModal.classList.contains('hidden')) {
+      modalTouchStartX = e.touches[0].clientX;
+    }
+  });
+
+  fasilitasModalImg.addEventListener('touchmove', (e) => {
+    // Hanya aktifkan swipe jika modal terlihat
+    if (!fasilitasModal.classList.contains('hidden')) {
+      modalTouchEndX = e.touches[0].clientX;
+    }
+  });
+
+  fasilitasModalImg.addEventListener('touchend', () => {
+    // Hanya aktifkan swipe jika modal terlihat
+    if (!fasilitasModal.classList.contains('hidden')) {
+      const swipeDistance = modalTouchStartX - modalTouchEndX;
+
+      if (swipeDistance > modalMinSwipeDistance) {
+        // Geser ke kiri (dari kanan ke kiri) -> tampilkan gambar berikutnya
+        showImg(fasilitasModalIdx + 1);
+      } else if (swipeDistance < -modalMinSwipeDistance) {
+        // Geser ke kanan (dari kiri ke kanan) -> tampilkan gambar sebelumnya
+        showImg(fasilitasModalIdx - 1);
+      }
+
+      // Reset nilai sentuhan
+      modalTouchStartX = 0;
+      modalTouchEndX = 0;
+    }
+  });
+  // --- AKHIR KODE BARU UNTUK SWIPE GESTURE PADA MODAL ---
+
+
+  // Kode untuk slider fasilitas (geser gambar) di halaman utama
+  document.addEventListener('DOMContentLoaded', function() {
+    const fasilitasImagesContainer = document.getElementById('fasilitasImages');
+    const fasilitasPrevBtn = document.getElementById('fasilitasPrev');
+    const fasilitasNextBtn = document.getElementById('fasilitasNext');
+
+    let currentFasilitasIndex = 0;
+    const totalFasilitasImages = fasilitasImagesContainer.children.length;
+    let autoSlideInterval; // Variabel untuk menyimpan ID interval
+
+    function updateFasilitasSlider() {
+      // Pastikan ada elemen anak sebelum mencoba mengakses offsetWidth
+      const itemWidth = fasilitasImagesContainer.children[0] ? fasilitasImagesContainer.children[0].offsetWidth : 400; // Default ke 400px
+      const offset = -currentFasilitasIndex * itemWidth;
+      fasilitasImagesContainer.style.transform = `translateX(${offset}px)`;
+    }
+
+    function startAutoSlide() {
+      // Hentikan interval sebelumnya jika ada
+      clearInterval(autoSlideInterval);
+      autoSlideInterval = setInterval(() => {
+        currentFasilitasIndex = (currentFasilitasIndex + 1) % totalFasilitasImages;
+        updateFasilitasSlider();
+      }, 5000); // Geser setiap 5 detik
+    }
+
+    // Mulai auto-slide saat halaman dimuat
+    startAutoSlide();
+
+    fasilitasNextBtn.addEventListener('click', () => {
+      currentFasilitasIndex = (currentFasilitasIndex + 1) % totalFasilitasImages;
+      updateFasilitasSlider();
+      startAutoSlide(); // Reset timer setelah interaksi manual
+    });
+
+    fasilitasPrevBtn.addEventListener('click', () => {
+      currentFasilitasIndex = (currentFasilitasIndex - 1 + totalFasilitasImages) % totalFasilitasImages;
+      updateFasilitasSlider();
+      startAutoSlide(); // Reset timer setelah interaksi manual
+    });
+
+    // Panggil saat halaman dimuat untuk memastikan posisi awal yang benar
+    updateFasilitasSlider();
+
+    // Tambahkan event listener untuk resize agar slider tetap responsif
+    window.addEventListener('resize', updateFasilitasSlider);
+
+    // --- KODE SWIPE GESTURE UNTUK SLIDER UTAMA ---
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const minSwipeDistance = 50; // Jarak minimum geser untuk dianggap sebagai swipe
+
+    fasilitasImagesContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      clearInterval(autoSlideInterval); // Hentikan auto-slide saat mulai swipe
+    });
+
+    fasilitasImagesContainer.addEventListener('touchmove', (e) => {
+      touchEndX = e.touches[0].clientX;
+    });
+
+    fasilitasImagesContainer.addEventListener('touchend', () => {
+      const swipeDistance = touchStartX - touchEndX;
+
+      if (swipeDistance > minSwipeDistance) {
+        // Geser ke kiri (next)
+        currentFasilitasIndex = (currentFasilitasIndex + 1) % totalFasilitasImages;
+        updateFasilitasSlider();
+      } else if (swipeDistance < -minSwipeDistance) {
+        // Geser ke kanan (prev)
+        currentFasilitasIndex = (currentFasilitasIndex - 1 + totalFasilitasImages) % totalFasilitasImages;
+        updateFasilitasSlider();
+      }
+
+      // Reset nilai sentuhan
+      touchStartX = 0;
+      touchEndX = 0;
+      startAutoSlide(); // Mulai lagi auto-slide setelah swipe selesai
+    });
+    // --- AKHIR KODE SWIPE GESTURE UNTUK SLIDER UTAMA ---
+
+  });
+</script>
+   <script type="module">
+     // 1. Firebase Configuration (REPLACE WITH YOUR ACTUAL CONFIG)
+     const firebaseConfig = {
+    apiKey: "AIzaSyBMJp4ktfl-bZaMDNuAhvDQPGRI15X1Jk4",
+    authDomain: "chery-booking-service-e1172.firebaseapp.com",
+    databaseURL: "https://chery-booking-service-e1172-default-rtdb.firebaseio.com/",
+    projectId: "chery-booking-service-e1172",
+    storageBucket: "chery-booking-service-e1172.firebasestorage.app",
+    messagingSenderId: "854480144755",
+    appId: "1:854480144755:web:1271daecf6f97b7efd1d06",
+    measurementId: "G-HHFPYJXPH0"
+     };
+
+     // 2. Import Firebase modules
+     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js';
+     import { getDatabase, ref, onValue, get, child, remove, set } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js';
+
+     // 3. Initialize Firebase
+     const app = initializeApp(firebaseConfig);
+     const db = getDatabase(app);
+
+     // --- DIAGNOSTIC LOGS ---
+     console.log("Firebase App initialized:", app);
+     console.log("Firebase Database instance:", db);
+     // --- END DIAGNOSTIC LOGS ---
+
+     // Mapping kode Free Maintenance ke label detail
+     const freeMaintenanceLabels = {
+       'first_maintenance_1000': 'First Maintenance (1.000 km/1 Bln)',
+       'first_maintenance_5000': 'First Maintenance (5.000 km/3 Bln)',
+       'first_maintenance_ev_5000': 'First Maintenance EV (5.000 km/6 Bln)',
+       'Tiggo_5X_/_Cross_Free': 'Tiggo 5X / Cross Series: Free Maintenance (5.000 km/6 Bln) - (10.000 km/12 Bln) - (20.000 km/24 Bln) - (30.000 km/36 Bln) - (40.000 km/48 Bln) - (60.000 km/72 Bln)',
+       'Tiggo_8_Free': 'Tiggo 8 Series: Free Maintenance (15.000 km/12 Bln) - (30.000 km/36 Bln) - (45.000 km/48 Bln) - (60.000 km/72 Bln)',
+       'EV_Free': 'EV Series: Free Maintenance (5.000 km/6 Bln) - (15.000 km/12 Bln) - (30.000 km/36 Bln) - (45.000 km/48 Bln) - (60.000 km/72 Bln)',
+       'CSH_Free': 'CSH Series: Free Maintenance (1.000 km/1 Bln) - (15.000 km/12 Bln) - (30.000 km/36 Bln) - (45.000 km/48 Bln) - (60.000 km/72 Bln)',
+       'Other': 'Other'
+     };
+
+     // Kolom Service otomatis melebar jika isinya Free Maintenance
+     function adjustServiceColumnWidth() {
+       const rows = document.querySelectorAll('#bookingListBody tr');
+       rows.forEach(row => {
+         const serviceCell = row.querySelector('td:nth-child(6)');
+         if (serviceCell) {
+           // Check if the displayed text contains "Free Maintenance"
+           if (serviceCell.textContent.includes('Free Maintenance')) {
+             serviceCell.style.minWidth = '400px';
+           } else {
+             serviceCell.style.minWidth = '220px'; // Default width
+           }
+         }
+       });
+     }
+
+     // Panggil setiap kali booking list di-render
+     window.displayBookings = function() {
+       const tbody = document.getElementById('bookingListBody');
+       if (!tbody) {
+         console.error("Error: #bookingListBody not found.");
+         return;
+       }
+
+       // --- DIAGNOSTIC LOG ---
+       console.log("Attempting to fetch bookings from Firebase...");
+       if (!db) {
+           console.error("Firebase 'db' object is undefined. Cannot fetch bookings.");
+           tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-red-500">Firebase not initialized. Check console for errors.</td></tr>';
+           return;
+       }
+       // --- END DIAGNOSTIC LOG ---
+
+       onValue(ref(db, "bookings"), (snapshot) => {
+         tbody.innerHTML = ""; // Clear existing rows
+         if (!snapshot.exists()) {
+           tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4">No bookings found.</td></tr>';
+           adjustServiceColumnWidth(); // Still call to ensure table layout
+           return;
+         }
+
+         snapshot.forEach((childSnap) => {
+           const booking = childSnap.val();
+           const id = childSnap.key;
+           const row = document.createElement("tr");
+           tbody.appendChild(row);
+
+           // Get the display value for service
+           const serviceDisplayValue = freeMaintenanceLabels[booking.service] || booking.service || '';
+
+           if (window.inlineEditId === id) {
+             // Inline edit mode
+             row.innerHTML = `
+               <td class="border border-gray-300"><input type="date" value="${booking.date || ''}" id="edit_date_${id}" class="border rounded p-1 w-full"></td>
+               <td class="border border-gray-300"><input type="time" value="${booking.time || ''}" id="edit_time_${id}" class="border rounded p-1 w-full"></td>
+               <td class="border border-gray-300"><input type="text" value="${booking.name || ''}" id="edit_name_${id}" class="border rounded p-1 w-full"></td>
+               <td class="border border-gray-300"><input type="text" value="${booking.model || ''}" id="edit_model_${id}" class="border rounded p-1 w-full"></td>
+               <td class="border border-gray-300"><input type="text" value="${(booking.Plat_Nomor || '').toUpperCase()}" id="edit_plat_${id}" class="border rounded p-1 w-full" oninput="this.value = this.value.toUpperCase()"></td>
+               <td class="border border-gray-300">
+                 <select id="edit_service_${id}" class="border rounded p-1 w-full">
+                   <option value="first_maintenance_1000" ${booking.service === 'first_maintenance_1000' ? 'selected' : ''}>First Maintenance (1.000 km/1 Bln)</option>
+                   <option value="first_maintenance_5000" ${booking.service === 'first_maintenance_5000' ? 'selected' : ''}>First Maintenance (5.000 km/3 Bln)</option>
+                   <option value="first_maintenance_ev_5000" ${booking.service === 'first_maintenance_ev_5000' ? 'selected' : ''}>First Maintenance EV (5.000 km/6 Bln)</option>
+                   <option value="Tiggo_5X_/_Cross_Free" ${booking.service === 'Tiggo_5X_/_Cross_Free' ? 'selected' : ''}>Tiggo 5X / Cross Series: Free Maintenance (5.000 km/6 Bln) - (10.000 km/12 Bln) - (20.000 km/24 Bln) - (30.000 km/36 Bln) - (40.000 km/48 Bln) - (60.000 km/72 Bln)</option>
+                   <option value="Tiggo_8_Free" ${booking.service === 'Tiggo_8_Free' ? 'selected' : ''}>Tiggo 8 Series: Free Maintenance (15.000 km/12 Bln) - (30.000 km/36 Bln) - (45.000 km/48 Bln) - (60.000 km/72 Bln)</option>
+                   <option value="EV_Free" ${booking.service === 'EV_Free' ? 'selected' : ''}>EV Series: Free Maintenance (5.000 km/6 Bln) - (15.000 km/12 Bln) - (30.000 km/36 Bln) - (45.000 km/48 Bln) - (60.000 km/72 Bln)</option>
+                   <option value="CSH_Free" ${booking.service === 'CSH_Free' ? 'selected' : ''}>CSH Series: Free Maintenance (1.000 km/1 Bln) - (15.000 km/12 Bln) - (30.000 km/36 Bln) - (45.000 km/48 Bln) - (60.000 km/72 Bln)</option>
+                   <option value="Other" ${booking.service === 'Other' ? 'selected' : ''}>Other</option>
+                 </select>
+               </td>
+               <td class="border border-gray-300"><input type="text" value="${booking.Keluhan || ''}" id="edit_keluhan_${id}" class="border rounded p-1 w-full"></td>
+               <td class="border border-gray-300"><input type="text" value="${booking.phone || ''}" id="edit_phone_${id}" class="border rounded p-1 w-full"></td>
+               <td class="space-x-2 border border-gray-300">
+                 <button onclick="saveInlineEditBooking('${id}')" class="bg-green-600 text-white px-3 py-1 rounded">Save</button>
+                 <button onclick="cancelInlineEditBooking()" class="bg-gray-400 text-white px-3 py-1 rounded">Cancel</button>
+               </td>`;
+           } else {
+             row.innerHTML = `
+               <td class="border border-gray-300">${booking.date || ''}</td>
+               <td class="border border-gray-300">${booking.time || ''}</td>
+               <td class="border border-gray-300">${booking.name || ''}</td>
+               <td class="border border-gray-300">${booking.model || ''}</td>
+               <td class="border border-gray-300">${(booking.Plat_Nomor || '').toUpperCase()}</td>
+               <td class="border border-gray-300">${serviceDisplayValue}</td>
+               <td class="border border-gray-300">${booking.Keluhan || "None"}</td>
+               <td class="border border-gray-300">${booking.phone || ''}</td>
+               <td class="space-x-2 border border-gray-300">
+                 <button onclick='inlineEditBooking("${id}")'
+                   class="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
+                 <button onclick="deleteBooking('${id}')"
+                   class="bg-red-600 text-white px-3 py-1 rounded">Delete</button>
+               </td>`;
+           }
+         });
+         adjustServiceColumnWidth();
+       }, (error) => {
+         console.error("Firebase onValue error:", error);
+         tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-red-500">Failed to load bookings. Check console for details.</td></tr>';
+       });
+     };
+
+     async function deleteBooking(id) {
+       if (!confirm("Are you sure you want to delete this booking?")) return;
+       try {
+         await remove(ref(db, "bookings/" + id));
+         console.log("Booking deleted:", id);
+       } catch (error) {
+         console.error("Error deleting booking:", error);
+         alert("Failed to delete booking.");
+       }
+     }
+
+     async function exportNow() {
+       try {
+         const snapshot = await get(child(ref(db), "bookings"));
+         if (!snapshot.exists()) {
+           alert("No bookings to export.");
+           return;
+         }
+         const bookings = [];
+         snapshot.forEach((childSnap) => {
+           const b = childSnap.val();
+           bookings.push({
+             Name: b.name || '',
+             "Plat Nomor": (b.Plat_Nomor || '').toUpperCase(), // Ensure uppercase for export
+             Phone: b.phone || '',
+             Model: b.model || '',
+             Service: freeMaintenanceLabels[b.service] || b.service || '', // Use display label
+             Date: b.date || '',
+             Time: b.time || '',
+             Keluhan: b.Keluhan || ''
+           });
+         });
+         const ws = XLSX.utils.json_to_sheet(bookings);
+         const wb = XLSX.utils.book_new();
+         XLSX.utils.book_append_sheet(wb, ws, "Bookings");
+         XLSX.writeFile(wb, "bookings.xlsx");
+       } catch (error) {
+         console.error("Export error:", error);
+         alert("Failed to export bookings.");
+       }
+     }
+
+     // Booking form submission handler
+     let editMode = false;
+     let editId = null;
+     window.handleBooking = async function(event) {
+       event.preventDefault();
+
+       const name = document.getElementById('name').value.trim();
+       const plat_kode = document.getElementById('plat_kode').value.trim().toUpperCase(); // Convert to uppercase
+       const plat_angka = document.getElementById('plat_angka').value.trim();
+       const plat_huruf = document.getElementById('plat_huruf').value.trim().toUpperCase(); // Convert to uppercase
+       const Plat_Nomor = `${plat_kode} ${plat_angka} ${plat_huruf}`.replace(/\s+/g, ' ').trim();
+       const phone = document.getElementById('phone').value.trim();
+       const model = document.getElementById('model').value.trim();
+       const service = document.getElementById('service').value;
+       const date = document.getElementById('date').value;
+       const time = document.getElementById('time').value;
+       const Keluhan = document.getElementById('Keluhan').value.trim();
+
+       if (!name || !Plat_Nomor || !phone || !model || !service || !date || !time) {
+         alert('Please fill in all required fields.');
+         return false;
+       }
+
+       const bookingData = { name, Plat_Nomor, phone, model, service, date, time, Keluhan };
+
+       try {
+         if (editMode && editId) {
+           await set(ref(db, "bookings/" + editId), bookingData);
+           alert("Booking updated successfully!");
+           editMode = false;
+           editId = null;
+         } else {
+           const newBookingRef = ref(db, `bookings/${Date.now()}`); // Unique ID for new booking
+           await set(newBookingRef, bookingData);
+           alert("Booking submitted successfully!");
+           event.target.reset(); // Clear the form
+         }
+         // Optionally, refresh admin panel if it's open
+         if (!document.getElementById('adminPanel').classList.contains('hidden')) {
+           displayBookings();
+         }
+       } catch (error) {
+         console.error("Error submitting booking:", error);
+         alert("Failed to submit booking. Please try again.");
+       }
+       return false; // Prevent default form submission
+     };
+
+     // Admin panel toggle
+     let isAdminLoggedIn = false;
+
+     function toggleAdminPanel() {
+       if (!isAdminLoggedIn) {
+         const password = prompt('Enter admin password:');
+         if (password === 'cheryarta01') {
+           isAdminLoggedIn = true;
+           // sembunyikan semua section biasa
+           document.querySelectorAll('.main-sections').forEach(sec => sec.classList.add('hidden'));
+           // tampilkan admin panel
+           document.getElementById('adminPanel').classList.remove('hidden');
+           displayBookings(); // Load bookings when admin panel is shown
+         } else {
+           alert('Incorrect password!');
+         }
+       } else {
+         // keluar dari admin
+         isAdminLoggedIn = false;
+         document.querySelectorAll('.main-sections').forEach(sec => sec.classList.remove('hidden'));
+         document.getElementById('adminPanel').classList.add('hidden');
+       }
+     }
+
+     // Mobile menu toggle
+     function toggleMenu() {
+       const menu = document.getElementById("mobile-menu");
+       menu.classList.toggle("hidden");
+     }
+
+     // Inline edit logic
+     window.inlineEditId = null;
+     function inlineEditBooking(id) {
+       window.inlineEditId = id;
+       displayBookings();
+     }
+     function cancelInlineEditBooking() {
+       window.inlineEditId = null;
+       displayBookings();
+     }
+     async function saveInlineEditBooking(id) {
+       const name = document.getElementById(`edit_name_${id}`).value.trim();
+       const fullPlatNomorInput = document.getElementById(`edit_plat_${id}`).value.trim();
+       
+       // Split and convert to uppercase for parts that should be
+       const platParts = fullPlatNomorInput.split(' ');
+       let Plat_Nomor_Formatted = '';
+       if (platParts.length === 3) {
+           Plat_Nomor_Formatted = `${(platParts[0] || '').toUpperCase()} ${platParts[1] || ''} ${(platParts[2] || '').toUpperCase()}`;
+       } else {
+           // Fallback if format is not as expected, try to uppercase the whole thing
+           Plat_Nomor_Formatted = fullPlatNomorInput.toUpperCase();
+       }
+
+       const phone = document.getElementById(`edit_phone_${id}`).value.trim();
+       const model = document.getElementById(`edit_model_${id}`).value.trim();
+       const service = document.getElementById(`edit_service_${id}`).value; // Get value from select
+       const date = document.getElementById(`edit_date_${id}`).value;
+       const time = document.getElementById(`edit_time_${id}`).value;
+       const Keluhan = document.getElementById(`edit_keluhan_${id}`).value.trim();
+
+       if (name && Plat_Nomor_Formatted && phone && model && service && date && time) {
+         try {
+           await set(ref(db, "bookings/" + id), {
+             name, Plat_Nomor: Plat_Nomor_Formatted, phone, model, service, date, time, Keluhan
+           });
+           window.inlineEditId = null;
+           displayBookings();
+           alert("Booking successfully updated!");
+         } catch (error) {
+           console.error("Error saving inline edit:", error);
+           alert("Failed to save changes.");
+         }
+       } else {
+         alert("Please fill all required fields for the booking.");
+       }
+     }
+
+     // Function to populate the main booking form for editing
+     window.editBooking = function(id, booking) {
+       document.getElementById('name').value = booking.name || '';
+       const platParts = (booking.Plat_Nomor || '').split(' ');
+       document.getElementById('plat_kode').value = (platParts[0] || '').toUpperCase(); // Convert to uppercase
+       document.getElementById('plat_angka').value = platParts[1] || '';
+       document.getElementById('plat_huruf').value = (platParts[2] || '').toUpperCase(); // Convert to uppercase
+       document.getElementById('phone').value = booking.phone || '';
+       document.getElementById('model').value = booking.model || '';
+       document.getElementById('service').value = booking.service || '';
+       document.getElementById('date').value = booking.date || '';
+       document.getElementById('time').value = booking.time || '';
+       document.getElementById('Keluhan').value = booking.Keluhan || '';
+
+       editMode = true;
+       editId = id;
+
+       document.getElementById('adminPanel').classList.add('hidden');
+       document.querySelectorAll('.main-sections').forEach(sec => sec.classList.remove('hidden'));
+       document.getElementById('booking').scrollIntoView();
+       alert("Silakan ubah data, lalu klik Submit untuk menyimpan perubahan.");
+     };
+
+
+     // Expose functions to the global scope for HTML event attributes
+     window.toggleAdminPanel = toggleAdminPanel;
+     window.toggleMenu = toggleMenu; // Ensure mobile menu toggle is also global
+     window.displayBookings = displayBookings;
+     window.deleteBooking = deleteBooking;
+     window.exportNow = exportNow;
+     window.inlineEditBooking = inlineEditBooking;
+     window.cancelInlineEditBooking = cancelInlineEditBooking;
+     window.saveInlineEditBooking = saveInlineEditBooking;
+
+     // Event listeners for admin buttons
+     document.addEventListener("DOMContentLoaded", () => {
+       const adminBtn = document.getElementById('adminToggleBtn');
+       if (adminBtn) {
+         adminBtn.addEventListener('click', (e) => {
+           console.log('Admin Panel button clicked (desktop)');
+           toggleAdminPanel();
+         });
+       } else {
+         console.error('adminToggleBtn not found');
+       }
+
+       const adminBtnMobile = document.getElementById('adminToggleBtnMobile');
+       if (adminBtnMobile) {
+         adminBtnMobile.addEventListener('click', (e) => {
+           console.log('Admin Panel button clicked (mobile)');
+           toggleAdminPanel();
+         });
+       } else {
+         console.error('adminToggleBtnMobile not found');
+       }
+
+       const exportBtn = document.getElementById('exportBtn');
+       if (exportBtn) {
+         exportBtn.addEventListener('click', exportNow);
+       } else {
+         console.error('exportBtn not found');
+       }
+
+       const logoutBtn = document.getElementById('adminLogoutBtn');
+       if (logoutBtn) {
+         logoutBtn.addEventListener('click', () => {
+           isAdminLoggedIn = false;
+           document.querySelectorAll('.main-sections')
+             .forEach(sec => sec.classList.remove('hidden'));
+           document.getElementById('adminPanel').classList.add('hidden');
+           console.log('Admin logged out.');
+         });
+       } else {
+         console.error('adminLogoutBtn not found');
+       }
+     });
+   </script>
+
+   </body>
+   </html>
